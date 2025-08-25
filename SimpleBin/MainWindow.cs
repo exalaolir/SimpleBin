@@ -145,7 +145,7 @@ namespace SimpleBin
         public static bool IsDarkThemeEnabled()
         {
             const string keyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
-            const string valueName = "AppsUseLightTheme";
+            const string valueName = "SystemUsesLightTheme";
 
             using var key = Registry.CurrentUser.OpenSubKey(keyPath);
 
