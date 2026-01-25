@@ -1,4 +1,5 @@
 using Microsoft.Win32;
+using SimpleBin.Helpers;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -14,7 +15,7 @@ namespace SimpleBin
         private bool _isDarkTheme;
 
         public MainWindow(BinHelper binHelper, IconHelper iconHelper)
-        {
+        {   
             var sysLang = CultureInfo.CurrentUICulture.Name;
             var appLang = "en-001";
             if (sysLang.Contains("ru")) appLang = "ru-Ru";

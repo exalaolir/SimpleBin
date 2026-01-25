@@ -7,7 +7,7 @@ using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimpleBin
+namespace SimpleBin.Helpers
 {
     public class IconHelper
     {

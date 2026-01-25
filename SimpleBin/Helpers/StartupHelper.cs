@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace SimpleBin
+namespace SimpleBin.Helpers
 {
     public static class StartupHelper
     {
