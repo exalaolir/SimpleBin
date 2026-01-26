@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SimpleBin.Helpers
 {
-    public class IconHelper
+    public sealed class IconHelper
     {
         private ResourceManager _resourceManager;
 

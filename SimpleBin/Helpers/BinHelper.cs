@@ -35,7 +35,7 @@ namespace SimpleBin
              RecycleBinFlags dwFlags);
     }
 
-    public class BinHelper : IDisposable
+    public sealed class BinHelper : IDisposable
     {
         private readonly List<FileSystemWatcher> _watchers = [];
         public delegate void BinUpdateHandler(object sender, FileSystemEventArgs e);
