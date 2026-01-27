@@ -396,9 +396,21 @@
     <value>Добавить в автозагрузку</value>
   </data>
   <data name="groupBox1.Text" xml:space="preserve">
-    <value>Управление</value>
+    <value>Настройки автозапуска</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Настройки</value>
+  </data>
+  <data name="groupBox2.Text" xml:space="preserve">
+    <value>Тема приложения</value>
+  </data>
+  <data name="SystemTheme" xml:space="preserve">
+    <value>Системная</value>
+  </data>
+  <data name="DarkTheme" xml:space="preserve">
+    <value>Тёмная</value>
+  </data>
+  <data name="LightTheme" xml:space="preserve">
+    <value>Светлая</value>
   </data>
 </root>

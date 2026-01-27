@@ -18,7 +18,7 @@ namespace SimpleBin.Helpers
 
         static StartupHelper()
         {
-            //Use to change Registry key when .exe location is changed
+            // Use to change Registry key when .exe location is changed
             if (IsInStartup())
             {
                 RemoveFromStartup();

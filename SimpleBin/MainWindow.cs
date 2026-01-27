@@ -5,6 +5,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using WinRT;
+using static SimpleBin.Helpers.AppThemeHelper;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace SimpleBin
 {
@@ -12,7 +15,7 @@ namespace SimpleBin
     {
         private readonly BinHelper _binHelper;
         private readonly IconHelper _iconHelper;
-        private bool _isDarkTheme;
+        private bool _isSystemDarkTheme;
 
         public MainWindow(BinHelper binHelper, IconHelper iconHelper)
         {
@@ -26,8 +29,11 @@ namespace SimpleBin
             Thread.CurrentThread.CurrentUICulture = culture;
 
             InitializeComponent();
+
+            InitializeThemeComboBox();
+
             _iconHelper = iconHelper;
-            _isDarkTheme = IsDarkThemeEnabled();
+            _isSystemDarkTheme = IsSystemDarkThemeEnabled();
             ThemeChanged += Form1_ThemeChanged;
             TrayMenu.RenderMode = ToolStripRenderMode.System;
 
@@ -43,22 +49,23 @@ namespace SimpleBin
             }
 
             _binHelper = binHelper;
-            UpdateControls();
+            UpdateStatsControls();
 
             _binHelper.Update += (s, e) =>
             {
                 if (this.InvokeRequired && !this.IsDisposed)
-                    BeginInvoke(UpdateControls);
-                else UpdateControls();
+                    BeginInvoke(UpdateStatsControls);
+                else if(!this.IsDisposed) 
+                    UpdateStatsControls();
             };
 
-            this.Load += (s, e) => HideForm();
+            this.Load += (s, e) => RecoverFormState();
         }
 
         private void Form1_ThemeChanged(bool isDarkTheme)
         {
             _iconHelper.SetTheme(isDarkTheme);
-            UpdateControls();
+            UpdateStatsControls();
         }
 
         private delegate void ThemeHandler(bool isDarkTheme);
@@ -95,7 +102,7 @@ namespace SimpleBin
             this.ShowInTaskbar = true;
         }
 
-        private void UpdateControls()
+        private void UpdateStatsControls()
         {
             var (biteSize, itemCount) = BinHelper.GetBinSize();
             SizeToolStripItem.Text = $"{SizeToolStripItem.Text?.Split()[0]} {ConvertSizeToString(biteSize)}";
@@ -130,11 +137,11 @@ namespace SimpleBin
             const int WM_SETTINGCHANGE = 0x001A;
             if (m.Msg == WM_SETTINGCHANGE && m.LParam != IntPtr.Zero)
             {
-                bool currentTheme = IsDarkThemeEnabled();
+                bool currentTheme = IsSystemDarkThemeEnabled();
 
-                if (_isDarkTheme != currentTheme)
+                if (_isSystemDarkTheme != currentTheme)
                 {
-                    _isDarkTheme = currentTheme;
+                    _isSystemDarkTheme = currentTheme;
                     ThemeChanged?.Invoke(currentTheme);
 
                     this.Refresh();
@@ -143,7 +150,7 @@ namespace SimpleBin
             base.WndProc(ref m);
         }
 
-        public static bool IsDarkThemeEnabled()
+        public static bool IsSystemDarkThemeEnabled()
         {
             const string keyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
             const string valueName = "SystemUsesLightTheme";
@@ -152,7 +159,7 @@ namespace SimpleBin
 
             var keyValue = key?.GetValue(valueName);
 
-            if (keyValue is null) return true; //If application can't open registry dark it will be use dark icons
+            if (keyValue is null) return true; // If application can't open registry dark it will be use dark icons
 
             return (int)keyValue == 0;
         }
@@ -169,6 +176,64 @@ namespace SimpleBin
             StartupHelper.RemoveFromStartup();
             AddToStartupBtn.Enabled = true;
             RemoveFromStartupBtn.Enabled = false;
+        }
+
+        private void InitializeThemeComboBox()
+        {
+            var resourceManager = new ComponentResourceManager(typeof(MainWindow));
+
+            object[] themeComboBoxItems = [
+                new KeyValuePair<Theme, string> (Theme.System, resourceManager.GetString("SystemTheme")!),
+                new KeyValuePair<Theme, string> (Theme.Dark,   resourceManager.GetString("DarkTheme")!),
+                new KeyValuePair<Theme, string> (Theme.Light,  resourceManager.GetString("LightTheme")!)
+            ];
+
+            ThemeComboBox.Items.AddRange(themeComboBoxItems);
+            ThemeComboBox.DisplayMember = "Value";
+            ThemeComboBox.ValueMember = "Key";
+
+            var currentTheme = AppThemeHelper.GetAppTheme();
+            ThemeComboBox.SelectedItem = themeComboBoxItems
+                .Cast<KeyValuePair<Theme, string>>()
+                .First(i => i.Key == currentTheme);
+        }
+
+        private void ThemeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ThemeComboBox.SelectedItem is KeyValuePair<Theme, string> pair)
+            {
+                AppThemeHelper.SetTheme(pair.Key);
+                if (this.Visible)
+                {
+                    SettingsHelper.Save(s =>
+                    {
+                        s.Left = this.Left;
+                        s.Top = this.Top;
+                        s.Width = this.Width;
+                        s.Height = this.Height;
+                        s.IsNeedRecover = true;
+                    });
+                    Application.Restart();
+                }
+            }
+        }
+
+        private void RecoverFormState()
+        {
+            if (SettingsHelper.Get(s => s.IsNeedRecover, false))
+            {
+                StartPosition = FormStartPosition.Manual;
+                this.Left = SettingsHelper.Get(s => s.Left, 0);
+                this.Top = SettingsHelper.Get(s => s.Top, 0);
+                this.Width = SettingsHelper.Get(s => s.Width, 0);
+                this.Height = SettingsHelper.Get(s => s.Height, 0);
+                SettingsHelper.Save(s => s.IsNeedRecover = false);
+                ShowForm();
+            }
+            else
+            {
+                HideForm();
+            }
         }
     }
 }

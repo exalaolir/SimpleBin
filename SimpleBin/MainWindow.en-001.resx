@@ -420,9 +420,21 @@
     <value>Add to autostart</value>
   </data>
   <data name="groupBox1.Text" xml:space="preserve">
-    <value>Program settings</value>
+    <value>Autostart settings</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="groupBox2.Text" xml:space="preserve">
+    <value>Colors</value>
+  </data>
+  <data name="SystemTheme" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="DarkTheme" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="LightTheme" xml:space="preserve">
+    <value>Light</value>
   </data>
 </root>

@@ -43,9 +43,12 @@
             groupBox1 = new GroupBox();
             RemoveFromStartupBtn = new Button();
             AddToStartupBtn = new Button();
+            groupBox2 = new GroupBox();
+            ThemeComboBox = new ComboBox();
             TrayMenu.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // TrayIcon
@@ -99,6 +102,7 @@
             // 
             resources.ApplyResources(tableLayoutPanel1, "tableLayoutPanel1");
             tableLayoutPanel1.Controls.Add(groupBox1, 0, 0);
+            tableLayoutPanel1.Controls.Add(groupBox2, 0, 1);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             // 
             // groupBox1
@@ -123,6 +127,21 @@
             AddToStartupBtn.UseVisualStyleBackColor = true;
             AddToStartupBtn.Click += AddToStartupBtn_Click;
             // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(ThemeComboBox);
+            resources.ApplyResources(groupBox2, "groupBox2");
+            groupBox2.Name = "groupBox2";
+            groupBox2.TabStop = false;
+            // 
+            // ThemeComboBox
+            // 
+            ThemeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            ThemeComboBox.FormattingEnabled = true;
+            resources.ApplyResources(ThemeComboBox, "ThemeComboBox");
+            ThemeComboBox.Name = "ThemeComboBox";
+            ThemeComboBox.SelectedIndexChanged += ThemeComboBox_SelectedIndexChanged;
+            // 
             // MainWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -135,6 +154,7 @@
             TrayMenu.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -152,5 +172,7 @@
         private GroupBox groupBox1;
         private Button RemoveFromStartupBtn;
         private Button AddToStartupBtn;
+        private GroupBox groupBox2;
+        private ComboBox ThemeComboBox;
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SimpleBin.Helpers
 {
-    public sealed class AppThemeHelper()
+    public static class AppThemeHelper
     {
         public enum Theme : byte
         {
@@ -16,13 +16,15 @@ namespace SimpleBin.Helpers
             Light
         }
 
-        public void Initialize()
+        public static void Initialize()
         {
             var theme = SettingsHelper.Get(s => (Theme)s.Theme, Theme.System);
             Application.SetColorMode(theme.ToSystemColorMode());
         }
 
-        public void SetTheme(Theme theme)
+        public static Theme GetAppTheme() => (Theme)SettingsHelper.Get(s => s.Theme, (byte)Theme.System);
+
+        public static void SetTheme(Theme theme)
         {
             SettingsHelper.Save(s => s.Theme = (byte)theme);
             Application.SetColorMode(theme.ToSystemColorMode());
