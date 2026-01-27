@@ -12,6 +12,7 @@ namespace SimpleBin
         private readonly BinHelper _binHelper;
         private readonly IconHelper _iconHelper;
         private bool _isSystemDarkTheme;
+        private bool _isRestarting;
 
         public MainWindow(BinHelper binHelper, IconHelper iconHelper)
         {
@@ -139,7 +140,7 @@ namespace SimpleBin
                     _isSystemDarkTheme = currentTheme;
                     ThemeChanged?.Invoke(currentTheme);
 
-                    if (AppThemeHelper.GetAppTheme() == Theme.System)
+                    if (AppThemeHelper.GetAppTheme() == Theme.System && !_isRestarting)
                     {
                         BeginInvoke(new Action(() => SaveFormStateAndRestart(needRecoverFormState: this.ShowInTaskbar)));
                     }
@@ -207,6 +208,8 @@ namespace SimpleBin
 
         private void SaveFormStateAndRestart(bool needRecoverFormState)
         {
+            _isRestarting = true;
+
             SettingsHelper.Save(s =>
             {
                 s.Left = Left;
