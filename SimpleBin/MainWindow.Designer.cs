@@ -45,10 +45,14 @@
             AddToStartupBtn = new Button();
             groupBox2 = new GroupBox();
             ThemeComboBox = new ComboBox();
+            linkBox = new GroupBox();
+            repoLink = new LinkLabel();
+            supportLink = new LinkLabel();
             TrayMenu.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
+            linkBox.SuspendLayout();
             SuspendLayout();
             // 
             // TrayIcon
@@ -103,6 +107,7 @@
             resources.ApplyResources(tableLayoutPanel1, "tableLayoutPanel1");
             tableLayoutPanel1.Controls.Add(groupBox1, 0, 0);
             tableLayoutPanel1.Controls.Add(groupBox2, 0, 1);
+            tableLayoutPanel1.Controls.Add(linkBox, 0, 2);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             // 
             // groupBox1
@@ -142,6 +147,30 @@
             ThemeComboBox.Name = "ThemeComboBox";
             ThemeComboBox.SelectedIndexChanged += ThemeComboBox_SelectedIndexChanged;
             // 
+            // linkBox
+            // 
+            linkBox.Controls.Add(repoLink);
+            linkBox.Controls.Add(supportLink);
+            resources.ApplyResources(linkBox, "linkBox");
+            linkBox.Name = "linkBox";
+            linkBox.TabStop = false;
+            // 
+            // repoLink
+            // 
+            resources.ApplyResources(repoLink, "repoLink");
+            repoLink.LinkColor = Color.DimGray;
+            repoLink.Name = "repoLink";
+            repoLink.TabStop = true;
+            repoLink.Click += repoLink_Click;
+            // 
+            // supportLink
+            // 
+            resources.ApplyResources(supportLink, "supportLink");
+            supportLink.LinkColor = Color.DimGray;
+            supportLink.Name = "supportLink";
+            supportLink.TabStop = true;
+            supportLink.Click += supportLink_Click;
+            // 
             // MainWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -155,6 +184,8 @@
             tableLayoutPanel1.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
+            linkBox.ResumeLayout(false);
+            linkBox.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -174,5 +205,8 @@
         private Button AddToStartupBtn;
         private GroupBox groupBox2;
         private ComboBox ThemeComboBox;
+        private GroupBox linkBox;
+        private LinkLabel repoLink;
+        private LinkLabel supportLink;
     }
 }

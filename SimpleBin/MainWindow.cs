@@ -3,11 +3,7 @@ using SimpleBin.Helpers;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using WinRT;
 using static SimpleBin.Helpers.AppThemeHelper;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace SimpleBin
 {
@@ -23,7 +19,6 @@ namespace SimpleBin
             var appLang = "en-001";
             if (sysLang.Contains("ru")) appLang = "ru-Ru";
             if (sysLang.Contains("pl")) appLang = "pl-Pl";
-
             var culture = new CultureInfo(appLang);
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
@@ -55,7 +50,7 @@ namespace SimpleBin
             {
                 if (this.InvokeRequired && !this.IsDisposed)
                     BeginInvoke(UpdateStatsControls);
-                else if(!this.IsDisposed) 
+                else if (!this.IsDisposed)
                     UpdateStatsControls();
             };
 
@@ -144,7 +139,10 @@ namespace SimpleBin
                     _isSystemDarkTheme = currentTheme;
                     ThemeChanged?.Invoke(currentTheme);
 
-                    this.Refresh();
+                    if (AppThemeHelper.GetAppTheme() == Theme.System)
+                    {
+                        BeginInvoke(new Action(() => SaveFormStateAndRestart(needRecoverFormState: this.ShowInTaskbar)));
+                    }
                 }
             }
             base.WndProc(ref m);
@@ -203,19 +201,28 @@ namespace SimpleBin
             if (ThemeComboBox.SelectedItem is KeyValuePair<Theme, string> pair)
             {
                 AppThemeHelper.SetTheme(pair.Key);
-                if (this.Visible)
-                {
-                    SettingsHelper.Save(s =>
-                    {
-                        s.Left = this.Left;
-                        s.Top = this.Top;
-                        s.Width = this.Width;
-                        s.Height = this.Height;
-                        s.IsNeedRecover = true;
-                    });
-                    Application.Restart();
-                }
+                if (this.Visible) SaveFormStateAndRestart(needRecoverFormState: true);
             }
+        }
+
+        private void SaveFormStateAndRestart(bool needRecoverFormState)
+        {
+            SettingsHelper.Save(s =>
+            {
+                s.Left = Left;
+                s.Top = Top;
+                s.Width = Width;
+                s.Height = Height;
+                s.IsNeedRecover = needRecoverFormState;
+            });
+
+            FormClosing -= Form1_FormClosing!;
+
+            TrayIcon.Visible = false;
+            TrayIcon.Dispose();
+
+            Application.Restart();
+            Environment.Exit(0);
         }
 
         private void RecoverFormState()
@@ -235,5 +242,17 @@ namespace SimpleBin
                 HideForm();
             }
         }
+
+        private void supportLink_Click(object sender, EventArgs e) => Process.Start(new ProcessStartInfo
+        {
+            FileName = @"https://boosty.to/exalaolir/donate",
+            UseShellExecute = true,
+        });
+
+        private void repoLink_Click(object sender, EventArgs e) => Process.Start(new ProcessStartInfo
+        {
+            FileName = @"https://github.com/exalaolir/SimpleBin",
+            UseShellExecute = true,
+        });
     }
 }

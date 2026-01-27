@@ -422,11 +422,11 @@
   <data name="groupBox1.Text" xml:space="preserve">
     <value>Autostart settings</value>
   </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Settings</value>
-  </data>
   <data name="groupBox2.Text" xml:space="preserve">
     <value>Colors</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="SystemTheme" xml:space="preserve">
     <value>System</value>
@@ -436,5 +436,14 @@
   </data>
   <data name="LightTheme" xml:space="preserve">
     <value>Light</value>
+  </data>
+  <data name="linkBox.Text" xml:space="preserve">
+    <value>Links</value>
+  </data>
+  <data name="repoLink.Text" xml:space="preserve">
+    <value>See source code</value>
+  </data>
+  <data name="supportLink.Text" xml:space="preserve">
+    <value>Support this project</value>
   </data>
 </root>

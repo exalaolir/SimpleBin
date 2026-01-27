@@ -398,11 +398,11 @@
   <data name="groupBox1.Text" xml:space="preserve">
     <value>Настройки автозапуска</value>
   </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Настройки</value>
-  </data>
   <data name="groupBox2.Text" xml:space="preserve">
     <value>Тема приложения</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Настройки</value>
   </data>
   <data name="SystemTheme" xml:space="preserve">
     <value>Системная</value>
@@ -412,5 +412,14 @@
   </data>
   <data name="LightTheme" xml:space="preserve">
     <value>Светлая</value>
+  </data>
+  <data name="linkBox.Text" xml:space="preserve">
+    <value>Ссылки</value>
+  </data>
+  <data name="repoLink.Text" xml:space="preserve">
+    <value>Просмотреть исходный код</value>
+  </data>
+  <data name="supportLink.Text" xml:space="preserve">
+    <value>Поддержать проект</value>
   </data>
 </root>
