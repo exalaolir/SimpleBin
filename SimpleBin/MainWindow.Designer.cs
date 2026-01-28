@@ -67,6 +67,8 @@
             TrayMenu.Items.AddRange(new ToolStripItem[] { ElementsToolStripItem, SizeToolStripItem, toolStripSeparator1, ClearToolStripItem, SettingsToolStripItem, ExitToolStripItem });
             TrayMenu.Name = "TrayMenu";
             TrayMenu.RenderMode = ToolStripRenderMode.System;
+            TrayMenu.ShowImageMargin = false;
+            TrayMenu.ShowItemToolTips = false;
             resources.ApplyResources(TrayMenu, "TrayMenu");
             // 
             // ElementsToolStripItem
@@ -174,7 +176,7 @@
             // MainWindow
             // 
             resources.ApplyResources(this, "$this");
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.Dpi;
             Controls.Add(tableLayoutPanel1);
             MaximizeBox = false;
             MinimizeBox = false;
