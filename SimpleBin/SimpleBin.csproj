@@ -24,6 +24,11 @@
 		<NoWarn>$(NoWarn);WFO5001</NoWarn>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<PublishReadyToRun>true</PublishReadyToRun>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<None Remove="config.json" />
 	</ItemGroup>

@@ -47,15 +47,20 @@ namespace SimpleBin
             _binHelper = binHelper;
             UpdateStatsControls();
 
-            _binHelper.Update += (s, e) =>
-            {
-                if (this.InvokeRequired && !this.IsDisposed)
-                    BeginInvoke(UpdateStatsControls);
-                else if (!this.IsDisposed)
-                    UpdateStatsControls();
-            };
+            _binHelper.Update += BinHelper_Update;
 
             this.Load += (s, e) => RecoverFormState();
+        }
+
+        private void BinHelper_Update(object? sender, EventArgs e)
+        {
+            if (IsDisposed || !IsHandleCreated)
+                return;
+
+            if (InvokeRequired)
+                BeginInvoke(UpdateStatsControls);
+            else
+                UpdateStatsControls();
         }
 
         private void Form1_ThemeChanged(bool isDarkTheme)
@@ -88,6 +93,12 @@ namespace SimpleBin
             this.ShowInTaskbar = false;
             this.Hide();
             TrayIcon.Visible = true;
+
+            //GC.Collect(2, GCCollectionMode.Forced);
+            //GC.WaitForPendingFinalizers();
+
+            //// 3. Очистка кэша GDI+
+            //System.Drawing.Graphics.FromHwnd(IntPtr.Zero).Dispose();
         }
 
         private void ShowForm()

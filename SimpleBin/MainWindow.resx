@@ -129,7 +129,7 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="ElementsToolStripItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>215, 32</value>
+    <value>134, 32</value>
   </data>
   <data name="ElementsToolStripItem.Text" xml:space="preserve">
     <value>Elements:</value>
@@ -138,34 +138,34 @@
     <value>False</value>
   </data>
   <data name="SizeToolStripItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>215, 32</value>
+    <value>134, 32</value>
   </data>
   <data name="SizeToolStripItem.Text" xml:space="preserve">
     <value>Размер:</value>
   </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>212, 6</value>
+    <value>131, 6</value>
   </data>
   <data name="ClearToolStripItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>215, 32</value>
+    <value>134, 32</value>
   </data>
   <data name="ClearToolStripItem.Text" xml:space="preserve">
     <value>Empty</value>
   </data>
   <data name="SettingsToolStripItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>215, 32</value>
+    <value>134, 32</value>
   </data>
   <data name="SettingsToolStripItem.Text" xml:space="preserve">
     <value>Settings</value>
   </data>
   <data name="ExitToolStripItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>215, 32</value>
+    <value>134, 32</value>
   </data>
   <data name="ExitToolStripItem.Text" xml:space="preserve">
     <value>Exit</value>
   </data>
   <data name="TrayMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>216, 203</value>
+    <value>135, 170</value>
   </data>
   <data name="&gt;&gt;TrayMenu.Name" xml:space="preserve">
     <value>TrayMenu</value>

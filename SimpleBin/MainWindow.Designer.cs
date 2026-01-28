@@ -15,8 +15,11 @@
         {
             if (disposing && (components != null))
             {
+                _binHelper.Update -= BinHelper_Update;
+                TrayIcon.MouseClick -= TrayIcon_MouseClick;
+                TrayIcon.ContextMenuStrip?.Dispose();
+                TrayIcon.Dispose();
                 components.Dispose();
-                _binHelper.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -114,6 +117,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.AccessibleRole = AccessibleRole.None;
             groupBox1.Controls.Add(RemoveFromStartupBtn);
             groupBox1.Controls.Add(AddToStartupBtn);
             resources.ApplyResources(groupBox1, "groupBox1");
@@ -122,6 +126,7 @@
             // 
             // RemoveFromStartupBtn
             // 
+            RemoveFromStartupBtn.AccessibleRole = AccessibleRole.None;
             resources.ApplyResources(RemoveFromStartupBtn, "RemoveFromStartupBtn");
             RemoveFromStartupBtn.Name = "RemoveFromStartupBtn";
             RemoveFromStartupBtn.UseVisualStyleBackColor = true;
@@ -129,6 +134,7 @@
             // 
             // AddToStartupBtn
             // 
+            AddToStartupBtn.AccessibleRole = AccessibleRole.None;
             resources.ApplyResources(AddToStartupBtn, "AddToStartupBtn");
             AddToStartupBtn.Name = "AddToStartupBtn";
             AddToStartupBtn.UseVisualStyleBackColor = true;
@@ -136,6 +142,7 @@
             // 
             // groupBox2
             // 
+            groupBox2.AccessibleRole = AccessibleRole.None;
             groupBox2.Controls.Add(ThemeComboBox);
             resources.ApplyResources(groupBox2, "groupBox2");
             groupBox2.Name = "groupBox2";
@@ -143,6 +150,7 @@
             // 
             // ThemeComboBox
             // 
+            ThemeComboBox.AccessibleRole = AccessibleRole.None;
             ThemeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             ThemeComboBox.FormattingEnabled = true;
             resources.ApplyResources(ThemeComboBox, "ThemeComboBox");
@@ -151,6 +159,7 @@
             // 
             // linkBox
             // 
+            linkBox.AccessibleRole = AccessibleRole.None;
             linkBox.Controls.Add(repoLink);
             linkBox.Controls.Add(supportLink);
             resources.ApplyResources(linkBox, "linkBox");
@@ -159,6 +168,7 @@
             // 
             // repoLink
             // 
+            repoLink.AccessibleRole = AccessibleRole.None;
             resources.ApplyResources(repoLink, "repoLink");
             repoLink.LinkColor = Color.DimGray;
             repoLink.Name = "repoLink";
@@ -167,6 +177,7 @@
             // 
             // supportLink
             // 
+            supportLink.AccessibleRole = AccessibleRole.None;
             resources.ApplyResources(supportLink, "supportLink");
             supportLink.LinkColor = Color.DimGray;
             supportLink.Name = "supportLink";
@@ -175,6 +186,7 @@
             // 
             // MainWindow
             // 
+            AccessibleRole = AccessibleRole.None;
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Dpi;
             Controls.Add(tableLayoutPanel1);
