@@ -1,9 +1,9 @@
 using Microsoft.Win32;
+using SimpleBin.Helpers;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
+using static SimpleBin.Helpers.AppThemeHelper;
 
 namespace SimpleBin
 {
@@ -11,7 +11,8 @@ namespace SimpleBin
     {
         private readonly BinHelper _binHelper;
         private readonly IconHelper _iconHelper;
-        private bool _isDarkTheme;
+        private bool _isSystemDarkTheme;
+        private bool _isRestarting;
 
         public MainWindow(BinHelper binHelper, IconHelper iconHelper)
         {
@@ -19,14 +20,16 @@ namespace SimpleBin
             var appLang = "en-001";
             if (sysLang.Contains("ru")) appLang = "ru-Ru";
             if (sysLang.Contains("pl")) appLang = "pl-Pl";
-
             var culture = new CultureInfo(appLang);
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
 
             InitializeComponent();
+
+            InitializeThemeComboBox();
+
             _iconHelper = iconHelper;
-            _isDarkTheme = IsDarkThemeEnabled();
+            _isSystemDarkTheme = IsSystemDarkThemeEnabled();
             ThemeChanged += Form1_ThemeChanged;
             TrayMenu.RenderMode = ToolStripRenderMode.System;
 
@@ -42,22 +45,28 @@ namespace SimpleBin
             }
 
             _binHelper = binHelper;
-            UpdateControls();
+            UpdateStatsControls();
 
-            _binHelper.Update += (s, e) =>
-            {
-                if (this.InvokeRequired && !this.IsDisposed)
-                    BeginInvoke(UpdateControls);
-                else UpdateControls();
-            };
+            _binHelper.Update += BinHelper_Update;
 
-            this.Load += (s, e) => HideForm();
+            this.Load += (s, e) => RecoverFormState();
+        }
+
+        private void BinHelper_Update(object? sender, EventArgs e)
+        {
+            if (IsDisposed || !IsHandleCreated)
+                return;
+
+            if (InvokeRequired)
+                BeginInvoke(UpdateStatsControls);
+            else
+                UpdateStatsControls();
         }
 
         private void Form1_ThemeChanged(bool isDarkTheme)
         {
             _iconHelper.SetTheme(isDarkTheme);
-            UpdateControls();
+            UpdateStatsControls();
         }
 
         private delegate void ThemeHandler(bool isDarkTheme);
@@ -84,6 +93,12 @@ namespace SimpleBin
             this.ShowInTaskbar = false;
             this.Hide();
             TrayIcon.Visible = true;
+
+            //GC.Collect(2, GCCollectionMode.Forced);
+            //GC.WaitForPendingFinalizers();
+
+            //// 3. Очистка кэша GDI+
+            //System.Drawing.Graphics.FromHwnd(IntPtr.Zero).Dispose();
         }
 
         private void ShowForm()
@@ -94,7 +109,7 @@ namespace SimpleBin
             this.ShowInTaskbar = true;
         }
 
-        private void UpdateControls()
+        private void UpdateStatsControls()
         {
             var (biteSize, itemCount) = BinHelper.GetBinSize();
             SizeToolStripItem.Text = $"{SizeToolStripItem.Text?.Split()[0]} {ConvertSizeToString(biteSize)}";
@@ -129,20 +144,23 @@ namespace SimpleBin
             const int WM_SETTINGCHANGE = 0x001A;
             if (m.Msg == WM_SETTINGCHANGE && m.LParam != IntPtr.Zero)
             {
-                bool currentTheme = IsDarkThemeEnabled();
+                bool currentTheme = IsSystemDarkThemeEnabled();
 
-                if (_isDarkTheme != currentTheme)
+                if (_isSystemDarkTheme != currentTheme)
                 {
-                    _isDarkTheme = currentTheme;
+                    _isSystemDarkTheme = currentTheme;
                     ThemeChanged?.Invoke(currentTheme);
 
-                    this.Refresh();
+                    if (AppThemeHelper.GetAppTheme() == Theme.System && !_isRestarting)
+                    {
+                        BeginInvoke(new Action(() => SaveFormStateAndRestart(needRecoverFormState: this.ShowInTaskbar)));
+                    }
                 }
             }
             base.WndProc(ref m);
         }
 
-        public static bool IsDarkThemeEnabled()
+        public static bool IsSystemDarkThemeEnabled()
         {
             const string keyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
             const string valueName = "SystemUsesLightTheme";
@@ -151,7 +169,7 @@ namespace SimpleBin
 
             var keyValue = key?.GetValue(valueName);
 
-            if (keyValue is null) return true; //If application can't open registry dark it will be use dark icons
+            if (keyValue is null) return true; // If application can't open registry dark it will be use dark icons
 
             return (int)keyValue == 0;
         }
@@ -169,5 +187,86 @@ namespace SimpleBin
             AddToStartupBtn.Enabled = true;
             RemoveFromStartupBtn.Enabled = false;
         }
+
+        private void InitializeThemeComboBox()
+        {
+            var resourceManager = new ComponentResourceManager(typeof(MainWindow));
+
+            object[] themeComboBoxItems = [
+                new KeyValuePair<Theme, string> (Theme.System, resourceManager.GetString("SystemTheme")!),
+                new KeyValuePair<Theme, string> (Theme.Dark,   resourceManager.GetString("DarkTheme")!),
+                new KeyValuePair<Theme, string> (Theme.Light,  resourceManager.GetString("LightTheme")!)
+            ];
+
+            ThemeComboBox.Items.AddRange(themeComboBoxItems);
+            ThemeComboBox.DisplayMember = "Value";
+            ThemeComboBox.ValueMember = "Key";
+
+            var currentTheme = AppThemeHelper.GetAppTheme();
+            ThemeComboBox.SelectedItem = themeComboBoxItems
+                .Cast<KeyValuePair<Theme, string>>()
+                .First(i => i.Key == currentTheme);
+        }
+
+        private void ThemeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ThemeComboBox.SelectedItem is KeyValuePair<Theme, string> pair)
+            {
+                AppThemeHelper.SetTheme(pair.Key);
+                if (this.Visible) SaveFormStateAndRestart(needRecoverFormState: true);
+            }
+        }
+
+        private void SaveFormStateAndRestart(bool needRecoverFormState)
+        {
+            _isRestarting = true;
+
+            SettingsHelper.Save(s =>
+            {
+                s.Left = Left;
+                s.Top = Top;
+                s.Width = Width;
+                s.Height = Height;
+                s.IsNeedRecover = needRecoverFormState;
+            });
+
+            FormClosing -= Form1_FormClosing!;
+
+            TrayIcon.Visible = false;
+            TrayIcon.Dispose();
+
+            Application.Restart();
+            Environment.Exit(0);
+        }
+
+        private void RecoverFormState()
+        {
+            if (SettingsHelper.Get(s => s.IsNeedRecover, false))
+            {
+                StartPosition = FormStartPosition.Manual;
+                this.Left = SettingsHelper.Get(s => s.Left, 0);
+                this.Top = SettingsHelper.Get(s => s.Top, 0);
+                this.Width = SettingsHelper.Get(s => s.Width, 0);
+                this.Height = SettingsHelper.Get(s => s.Height, 0);
+                SettingsHelper.Save(s => s.IsNeedRecover = false);
+                ShowForm();
+            }
+            else
+            {
+                HideForm();
+            }
+        }
+
+        private void supportLink_Click(object sender, EventArgs e) => Process.Start(new ProcessStartInfo
+        {
+            FileName = @"https://boosty.to/exalaolir/donate",
+            UseShellExecute = true,
+        });
+
+        private void repoLink_Click(object sender, EventArgs e) => Process.Start(new ProcessStartInfo
+        {
+            FileName = @"https://github.com/exalaolir/SimpleBin",
+            UseShellExecute = true,
+        });
     }
 }

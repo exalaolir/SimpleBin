@@ -15,8 +15,11 @@
         {
             if (disposing && (components != null))
             {
+                _binHelper.Update -= BinHelper_Update;
+                TrayIcon.MouseClick -= TrayIcon_MouseClick;
+                TrayIcon.ContextMenuStrip?.Dispose();
+                TrayIcon.Dispose();
                 components.Dispose();
-                _binHelper.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -43,9 +46,16 @@
             groupBox1 = new GroupBox();
             RemoveFromStartupBtn = new Button();
             AddToStartupBtn = new Button();
+            groupBox2 = new GroupBox();
+            ThemeComboBox = new ComboBox();
+            linkBox = new GroupBox();
+            repoLink = new LinkLabel();
+            supportLink = new LinkLabel();
             TrayMenu.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            linkBox.SuspendLayout();
             SuspendLayout();
             // 
             // TrayIcon
@@ -60,6 +70,8 @@
             TrayMenu.Items.AddRange(new ToolStripItem[] { ElementsToolStripItem, SizeToolStripItem, toolStripSeparator1, ClearToolStripItem, SettingsToolStripItem, ExitToolStripItem });
             TrayMenu.Name = "TrayMenu";
             TrayMenu.RenderMode = ToolStripRenderMode.System;
+            TrayMenu.ShowImageMargin = false;
+            TrayMenu.ShowItemToolTips = false;
             resources.ApplyResources(TrayMenu, "TrayMenu");
             // 
             // ElementsToolStripItem
@@ -99,10 +111,13 @@
             // 
             resources.ApplyResources(tableLayoutPanel1, "tableLayoutPanel1");
             tableLayoutPanel1.Controls.Add(groupBox1, 0, 0);
+            tableLayoutPanel1.Controls.Add(groupBox2, 0, 1);
+            tableLayoutPanel1.Controls.Add(linkBox, 0, 2);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             // 
             // groupBox1
             // 
+            groupBox1.AccessibleRole = AccessibleRole.None;
             groupBox1.Controls.Add(RemoveFromStartupBtn);
             groupBox1.Controls.Add(AddToStartupBtn);
             resources.ApplyResources(groupBox1, "groupBox1");
@@ -111,6 +126,7 @@
             // 
             // RemoveFromStartupBtn
             // 
+            RemoveFromStartupBtn.AccessibleRole = AccessibleRole.None;
             resources.ApplyResources(RemoveFromStartupBtn, "RemoveFromStartupBtn");
             RemoveFromStartupBtn.Name = "RemoveFromStartupBtn";
             RemoveFromStartupBtn.UseVisualStyleBackColor = true;
@@ -118,15 +134,61 @@
             // 
             // AddToStartupBtn
             // 
+            AddToStartupBtn.AccessibleRole = AccessibleRole.None;
             resources.ApplyResources(AddToStartupBtn, "AddToStartupBtn");
             AddToStartupBtn.Name = "AddToStartupBtn";
             AddToStartupBtn.UseVisualStyleBackColor = true;
             AddToStartupBtn.Click += AddToStartupBtn_Click;
             // 
+            // groupBox2
+            // 
+            groupBox2.AccessibleRole = AccessibleRole.None;
+            groupBox2.Controls.Add(ThemeComboBox);
+            resources.ApplyResources(groupBox2, "groupBox2");
+            groupBox2.Name = "groupBox2";
+            groupBox2.TabStop = false;
+            // 
+            // ThemeComboBox
+            // 
+            ThemeComboBox.AccessibleRole = AccessibleRole.None;
+            ThemeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            ThemeComboBox.FormattingEnabled = true;
+            resources.ApplyResources(ThemeComboBox, "ThemeComboBox");
+            ThemeComboBox.Name = "ThemeComboBox";
+            ThemeComboBox.SelectedIndexChanged += ThemeComboBox_SelectedIndexChanged;
+            // 
+            // linkBox
+            // 
+            linkBox.AccessibleRole = AccessibleRole.None;
+            linkBox.Controls.Add(repoLink);
+            linkBox.Controls.Add(supportLink);
+            resources.ApplyResources(linkBox, "linkBox");
+            linkBox.Name = "linkBox";
+            linkBox.TabStop = false;
+            // 
+            // repoLink
+            // 
+            repoLink.AccessibleRole = AccessibleRole.None;
+            resources.ApplyResources(repoLink, "repoLink");
+            repoLink.LinkColor = Color.DimGray;
+            repoLink.Name = "repoLink";
+            repoLink.TabStop = true;
+            repoLink.Click += repoLink_Click;
+            // 
+            // supportLink
+            // 
+            supportLink.AccessibleRole = AccessibleRole.None;
+            resources.ApplyResources(supportLink, "supportLink");
+            supportLink.LinkColor = Color.DimGray;
+            supportLink.Name = "supportLink";
+            supportLink.TabStop = true;
+            supportLink.Click += supportLink_Click;
+            // 
             // MainWindow
             // 
+            AccessibleRole = AccessibleRole.None;
             resources.ApplyResources(this, "$this");
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.Dpi;
             Controls.Add(tableLayoutPanel1);
             MaximizeBox = false;
             MinimizeBox = false;
@@ -135,6 +197,9 @@
             TrayMenu.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
+            linkBox.ResumeLayout(false);
+            linkBox.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -152,5 +217,10 @@
         private GroupBox groupBox1;
         private Button RemoveFromStartupBtn;
         private Button AddToStartupBtn;
+        private GroupBox groupBox2;
+        private ComboBox ThemeComboBox;
+        private GroupBox linkBox;
+        private LinkLabel repoLink;
+        private LinkLabel supportLink;
     }
 }

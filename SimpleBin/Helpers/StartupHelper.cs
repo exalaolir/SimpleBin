@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace SimpleBin
+namespace SimpleBin.Helpers
 {
     public static class StartupHelper
     {
@@ -18,7 +18,7 @@ namespace SimpleBin
 
         static StartupHelper()
         {
-            //Use to change Registry key when .exe lockation is changed
+            // Use to change Registry key when .exe location is changed
             if (IsInStartup())
             {
                 RemoveFromStartup();

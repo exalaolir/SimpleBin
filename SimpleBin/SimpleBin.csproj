@@ -4,15 +4,15 @@
 		<!--DPIScalingFix-->
 		<!--<ApplicationHighDpiMode>DpiUnawareGdiScaled</ApplicationHighDpiMode>-->
 		<!--There are problems with text resolution in my PC-->
-		
+
 		<!--Main-->
 		<OutputType>WinExe</OutputType>
 		<Nullable>enable</Nullable>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
+		<TargetFramework>net10.0-windows</TargetFramework>
 		<ApplicationIcon>App.ico</ApplicationIcon>
-		<AssemblyVersion>1.0.1</AssemblyVersion>
+		<AssemblyVersion>1.1.0</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
 		<Authors>exalaolir</Authors>
@@ -21,54 +21,72 @@
 		<PackageProjectUrl>https://github.com/exalaolir/SimpleBin</PackageProjectUrl>
 		<Description>This is a small program that adds a system recycle bin shortcut to the tray.</Description>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<NoWarn>$(NoWarn);WFO5001</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PublishReadyToRun>true</PublishReadyToRun>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="config.json" />
+		<None Remove="config.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="App.ico" />
+		<Content Include="App.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Roslynator.Analyzers" Version="4.13.1">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="Roslynator.CodeFixes" Version="4.13.1">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.13.1">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="Velopack" Version="0.0.1298" />
+		<PackageReference Include="Roslynator.Analyzers" Version="4.13.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Roslynator.CodeFixes" Version="4.13.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.13.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Velopack" Version="0.0.1298" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Resources\LightIcons.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>LightIcons.resx</DependentUpon>
-	  </Compile>
-	  <Compile Update="Resources\DarkIcons.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>DarkIcons.resx</DependentUpon>
-	  </Compile>
+		<Compile Update="Properties\Settings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+		<Compile Update="Resources\LightIcons.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>LightIcons.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Resources\DarkIcons.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>DarkIcons.resx</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Update="Resources\LightIcons.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>LightIcons.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
-	  <EmbeddedResource Update="Resources\DarkIcons.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>DarkIcons.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
+		<EmbeddedResource Update="Resources\LightIcons.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>LightIcons.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Resources\DarkIcons.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>DarkIcons.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
 	</ItemGroup>
 
 </Project>
